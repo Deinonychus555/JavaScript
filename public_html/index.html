@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<!-- Contiene algunos ejemplos -->
+<!-- Los distintos apartados están marcados con * -->
+<html>
+
+<head>
+
+    <title>JavaScript</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://raw.githubusercontent.com/lodash/lodash/2.4.1/dist/lodash.js"></script>
+
+</head>
+
+<body>
+
+
+<script type="text/javascript"> 
+
+    window.document.write(new Date());
+    document.write("<br><br>");
+
+    //window.open("http://www.google.es","","width=550,height=420,menubar=no");
+
+    window.alert("window.alert()"); 
+
+    // Toda variable en javascript debe crearse anteponiendo 'var'.
+
+    // Con la función 'Object.keys()' mostramos las propiedades de un objeto que no están contenidas en el prototipo.
+    
+    // * ARRAY LIKE OBJECT
+
+    // Para copiar objetos utilizamos la función 'Object.create()'.
+    // Todas las propiedades se copiaran en el prototipo del nuevo objeto.
+    // Ejemplo: var circulo=Object.create(cuadrado) (copia también el prototipo)
+
+    // Para crear propiedades en el prototipo utilizamos la propiedad '._proto_'
+    // Ejemplo: cuadrado.__proto__={clase:"figura"}
+
+    // Para heredar prototipos de objetos utilizamos la función 'Object.create(*._proto_)'.
+    // Ejemplo: var rombo=Object.create(cuadrado.__proto__)
+
+    var cuadrado={ area:27, perimetro:32, }
+
+    console.log("cuadrado.area: "+cuadrado['area']);
+    console.log("cuadrado.perimetro: "+cuadrado['perimetro']);
+    
+    // Añadimos una propiedad.
+    cuadrado.color="naranja"; 
+    console.log("cuadrado.color: "+cuadrado['color']);
+
+
+    // * PROTOTIPO EN ARRAYS LIKE OBJECT
+    // El prototipo es la propiedad -> ._proto_
+
+    // Añadimos prototipo a un array like object.
+    var prototipo_cuadrado={clase:"figura"}
+    cuadrado.__proto__=Object.create(prototipo_cuadrado);
+    console.log("cuadrado: "+Object.keys(cuadrado)); // muestra los atributos propios del objeto
+    console.log("cuadrado prototipo: "+cuadrado.clase);
+    delete cuadrado['clase'];
+
+    // * HERENCIA DE PROTOTIPO.
+
+    // ¡¡Forma incorrecta!!
+    // Herencia
+    // Todas las propiedades de cuadrado se pasan al prototipo de circulo.
+    var circulo=Object.create(cuadrado);
+    console.log("circulo: "+Object.keys(circulo));
+    console.log("circulo prototipo: "+circulo.clase);
+
+    // Forma correcta de herencia de prototipo.
+    var rombo=Object.create(cuadrado.__proto__);
+    console.log("rombo: "+Object.keys(rombo));
+    console.log("rombo prototipo: "+rombo.clase);
+    
+    
+    
+    // * SOBRECARGA DE FUNCIONES
+
+     // El nombre de la función debe ir en mayúscula para que permita tratarla como un costructor, es decir, con la función 'new' 
+     // Ejemplo: var vehiculo = new Vehiculo()
+
+    function Vehiculo(ruedas, medio){
+
+        // Utilizar this. para tratar sus propiedades y métodos.
+
+        // Ponemos valor por defecto a los atributos.
+        this.ruedas=ruedas||2;  
+        this.medio=medio||"tierra";
+
+        // Implementamos algunos métodos.
+        this.arrancar=function(){return "Soy un vehiculo y he arrancado";}
+        this.toString=function(){return "Soy un vehiculo de "+this.medio+" con "+this.ruedas+" ruedas";}
+
+        // Comprobamos si la función se ha llamado con más argumentos.
+        // La variable 'arguments' contiene todos los parámetros que recibe la función.
+        // La función 'typeof' devuelve el nombre de la clase de un objeto.
+        if (arguments.length >=3){ // El objeto arguments contiene todos los argumentos.
+            if (typeof(arguments[2])==='string'){ //¡Cuidado!, el tipo se pone entre comillas simples
+                this.tipo=arguments[2];
+                console.log("Este vehiculo es un "+this.tipo);
+            }
+            else{ // Se supone que el parámetro es de tipo integer.
+                this.matricula=arguments[2];
+                console.log("La matricula de este vehiculo es "+this.matricula);
+            }
+        }
+    }    
+    
+
+
+    var vehiculo = new Vehiculo();
+    var velero=new Vehiculo(0,"mar","velero");
+    var moto=new Vehiculo(2,"tierra",2345);
+    console.log("vehiculo: "+Object.keys(vehiculo));
+    console.log("velero: "+Object.keys(velero));
+    console.log("moto: "+Object.keys(moto));
+
+
+    // * HERENCIA SIMPLE DE OBJETOS
+
+    // Llamada al constructor de la clase padre: ClasePadre.call(this,argumento). NO se hereda el prototipo.
+
+    // Para llamar a una propiedad de la clase padre se utiliza la propiedad '.call'
+    // Ejemplo: Jefe.prototype.toString=function(){return Empleado.prototype.toString.call(this)+"   Empresa: "+this.empresa;} 
+
+    function Padre(nombre){
+
+        this.nombre=nombre;
+        this.ojos=function(){console.log("Ojos azules"); return "Ojos azules"};
+        this.pelo=function(){console.log("Ojos azules"); return "Ojos azules"};
+        this.nariz=function(){console.log("Nariz aguileña");return "Nariz aguileña"};
+        
+    }
+
+    function Hijo(nombre){
+
+        // LLamando al constructor padre heredará todas las funciones y atributos de éste, pero NO el prototipo
+        Padre.call(this,nombre); 
+
+
+    }
+    
+    var hijo=new Hijo("Pepito Junior");
+    console.log("hijo: "+Object.keys(hijo));
+
+
+     // * PROTOTIPO DE OBJETOS
+
+     // Creando nuevas propiedades en un prototipo: Clase.prototype.propiedad=*.
+
+     // Herencia de prototipo: Clase1.prototype=Object.create(Clase2.prototype).
+
+    function Empleado (nombre,apellido,despacho){
+
+        this.nombre=nombre;
+        this.apellido=apellido;
+        this.despacho=despacho;
+        this.currar=function(){return "Yo soy un empleado y curro";}
+    }
+
+    // Definimos funciones para el prototipo
+    Empleado.prototype.toString=function(){return "Nombre: "+this.nombre+"   "+"Apellido: "+this.apellido;}
+    Empleado.prototype.desplazar=function(){return "Me desplazo en coche al trabajo";}
+
+
+    function Jefe (nombre,apellido,empresa) {
+          
+        //Empleado.call(this,nombre,apellido);
+        this.nombre=nombre;
+        this.apellido=apellido;
+        this.empresa=empresa;
+        this.mandar=function(){return "Yo soy un jefe y mando";}
+      }  
+
+    // Asignación de prototipo, lo hereda  
+    Jefe.prototype=Object.create(Empleado.prototype);
+    // Definimos funciones para el prototipo
+    Jefe.prototype.toString=function(){return Empleado.prototype.toString.call(this)+"   Empresa: "+this.empresa;} 
+    Jefe.prototype.amante=function(){return "Tengo una amante";} 
+
+
+    function Jefazo (nombre,apellido,empresa) {
+         
+        // Hereda solo los atributos, NO el prototipo.  
+        Jefe.call(this,nombre,apellido,empresa);
+        this.tarjeta="black";
+        
+      }  
+
+    // Asignación de prototipo, lo hereda 
+    Jefazo.prototype=Object.create(Jefe.prototype);
+    Jefazo.prototype.superior=function(){return "Soy intocable"}
+
+    function Ejecutivo(cargo){
+
+        this.cargo=cargo;
+    }
+    
+    // Asignación de prototipo y herencia, hereda el prototipo y los atributos
+    Ejecutivo.prototype=new Jefazo();
+    
+    var empleado=new Empleado("Juan","Echeve",345);
+    var jefe = new Jefe("Pedro", "Martinez", "Endesa");
+    var jefazo = new Jefazo ("Manuel", "Torres", "Endesa");
+    var ejecutivo=new Ejecutivo("jefazo");
+
+   console.log("ejecutivo: "+Object.keys(ejecutivo));
+   console.log("jefazo: "+Object.keys(jefazo));
+   console.log("jefe: "+Object.keys(jefe));
+   console.log("empleado: "+Object.keys(empleado));
+
+
+    function cambiar_texto(){
+        document.getElementById("vehiculo_funcion").innerHTML=vehiculo.toString();
+        document.getElementById("empleado").innerHTML=empleado.toString();
+        document.getElementById("empleado_funcion").innerHTML=empleado.currar();
+        document.getElementById("jefe").innerHTML=jefe.toString();
+        document.getElementById("jefe_funcion").innerHTML=jefe.desplazar();
+    }    
+
+    // * PROPIEDADES PRIVADAS
+
+    //  Para simular atributos privados se juega con el ámbito de uso de las variables en Javascript. Para declarar lo atributo privados, se deja de utilizar la clausula this y se pasa a definirlos como variables locales.
+
+     function Rectangulo (base,altura){
+        
+        var base=0||base;
+        var altura=altura||base;
+        this.getBase=function(){return base   ;   }
+        this.getAltura=function(){return altura    ;    }
+        this.setBase=function(x){base=x;}
+        this.setAltura=function(y){altura=y;}
+    }
+
+
+    var rectangulo=new Rectangulo(2);
+    console.log("rectangulo: "+Object.keys(rectangulo));
+    console.log("rectangulo.base: "+rectangulo.base);
+    rectangulo.base=1; // creo una nueva propiedad
+    console.log("rectangulo.base: "+rectangulo.base);
+    console.log("rectangulo.getBase(): "+rectangulo.getBase());
+    console.log("rectangulo.getAltura(): "+rectangulo.getAltura());
+    rectangulo.setAltura(5);
+    console.log("rectangulo.getAltura(): "+rectangulo.getAltura());
+
+    
+    // Con la función 'Object.defineProperties(Clase,{propiedad:{...}})' se definen las propiedades.
+       
+    var circunferencia = {radio:2, area:14};
+
+    Object.defineProperties(circunferencia,
+        {
+           pi:{
+            value:3.14,
+            writable:false,
+            enumerable:true,
+           },    
+           clase:{
+            value:"circulo",
+            writable:false,
+            enumerable:false,
+           }     
+    });
+    console.log("circunferencia: "+Object.keys(circunferencia));
+    console.log("circunferencia.pi: "+circunferencia.pi);
+    console.log("circunferencia.clase: "+circunferencia.clase);
+    circunferencia.pi=666;
+    circunferencia.clase="cuadrado";
+    console.log("circunferencia.pi: "+circunferencia.pi);
+    console.log("circunferencia.clase: "+circunferencia.clase);
+
+
+
+   // Con la función Object.defineProperty(Claase,'propiedad',{...}) se define una propiedad.
+
+
+    function Triangulo (base,altura){
+        
+        var _base=0||base;
+        var _altura=altura||base;
+        var _numlados=3;
+
+        Object.defineProperty(this, 'base',{ 
+          
+            get:function(){return _base   ;   } ,
+            set:function(x){_base=x;} ,
+            enumerable:true,
+            configurable:true 
+            }); 
+
+        Object.defineProperty(this, 'altura',{ 
+          
+            get:function(){return _altura  ;   } ,
+            set:function(x){_altura=x;} ,
+            enumerable:true,
+            configurable:true 
+            }); 
+
+        Object.defineProperty(this, 'numlados',{ 
+          
+            get:function(){return _numlados  ;   } ,
+            enumerable:true,
+            configurable:true 
+            }); 
+        
+    }
+
+    var triangulo=new Triangulo (3,5);
+    console.log("triangulo: "+Object.keys(triangulo));
+    console.log("triangulo.base: "+triangulo.base);
+    console.log("triangulo.altura: "+triangulo.altura);
+    console.log("triangulo.numlados: "+triangulo.numlados);
+    triangulo.base=55;
+    triangulo.altura=33;
+    triangulo.numlados=666; // no se cambia puesto que no tiene 'set'
+    console.log("triangulo.base: "+triangulo.base);
+    console.log("triangulo.altura: "+triangulo.altura);
+    console.log("triangulo.numlados: "+triangulo.numlados);
+    
+   
+    function Circunferencia2 (radio,area){
+        var _radio=radio;
+        var _area=area;
+        var _tipo="figura";
+
+    Object.defineProperties(this,
+        {
+           radio:{
+                get:function(){return _radio  ;   } ,
+                set:function(x){_radio=x;} ,
+                enumerable:true,
+                configurable:true 
+            },    
+
+           area:{
+                get:function(){return _area  ;   } ,
+                set:function(x){_area=x;} ,
+                enumerable:true,
+                configurable:true 
+            }, 
+
+            tipo:{
+                get:function(){return _tipo  ;   } ,
+                enumerable:true,
+                configurable:true 
+            }, 
+
+            pi:{
+                value:3.14,
+                writable:false,
+                enumerable:true,
+           }  
+                
+        });
+              
+    
+    };
+
+    
+
+    var circunferencia2=new Circunferencia2(12,15);
+    console.log("circunferencia2: "+Object.keys(circunferencia2));
+    console.log("circunferencia2.radio: "+circunferencia2.radio);
+    console.log("circunferencia2.area: "+circunferencia2.area);
+    console.log("circunferencia2.tipo: "+circunferencia2.tipo);
+    circunferencia2.radio=666;
+    circunferencia2.area=555;
+    circunferencia2.tipo="pescado";
+    console.log("circunferencia2.radio: "+circunferencia2.radio);
+    console.log("circunferencia2.area: "+circunferencia2.area);
+    console.log("circunferencia2.tipo: "+circunferencia2.tipo);
+    document.write("circunferencia2.forma: "+circunferencia2.forma);
+    document.write("<br/>");
+    circunferencia.forma="cuadrada"; 
+    document.write("circunferencia2.forma: "+circunferencia2.forma); 
+    document.write("<br/>");
+    document.write("<br/>");
+    
+    // * HERENCIA DE PROTOTIPO CON ATRIBUTOS PRIVADOS
+    
+    Object.defineProperty(Circunferencia2.prototype,'forma',{
+        value:"redonda",
+        writable:false,
+        enumerable:true,
+    });
+
+    function Circunferencia3 (radio,area){
+        Circunferencia2.call(this,radio,area)
+    }
+
+    Circunferencia3.prototype=Object.create(Circunferencia2.prototype);
+
+    var circunferencia3=new Circunferencia3(22,25);
+    console.log("circunferencia3: "+Object.keys(circunferencia3));
+
+
+    // * JSON y LODASH (https://lodash.com/)
+    // Documentación: https://lodash.com/docs
+    // https://raw.githubusercontent.com/lodash/lodash/2.4.1/dist/lodash.js
+
+    var trabajadores  = [empleado, jefe, jefazo, ejecutivo];
+
+    var busqueda=_.find(trabajadores, function(trabajadores) {
+
+        return trabajadores.nombre=="Juan";
+
+    });
+     
+    document.write(busqueda);
+    document.write("<br/>");
+
+    var resultado=_(trabajadores).first(2).sortBy('nombre').value();
+    while (resultado.length > 0) {
+        document.write(resultado.pop() + "<br/>");
+    }
+    document.write("<br/>");
+
+    resultado=_(trabajadores).filter({empresa:'Endesa'}).sort().value();
+    while (resultado.length > 0) {
+        document.write(resultado.pop() + "<br/>");
+    }
+    document.write("<br/>");
+
+    // Convertir objetos a Json: 'Json.stringify(objeto)'
+    var str = JSON.stringify(trabajadores);
+    document.write(str);
+    document.write ("<br/>");
+
+
+    document.write ("-------------------");
+    document.write ("<br/>");
+
+    // Convertir Json a objetos: 'JSON.parse(json)'
+    //var newtrabajadores = JSON.parse(str);
+
+    var newtrabajadores = JSON.parse( JSON.stringify(trabajadores));
+    document.write(newtrabajadores);
+    document.write ("<br/>");
+    while (newtrabajadores.length > 0) {
+        document.write(newtrabajadores.pop().name + "<br/>");
+    }
+
+    document.write ("-------------------");
+    document.write ("<br/>");
+
+
+    resultado=_(newtrabajadores).filter({empresa:'Endesa'}).sort().value();
+    document.write(resultado);
+    document.write("------------------");
+
+    while (resultado.length > 0) {
+        document.write(resultado.pop().name + "<br/>");
+    }
+    document.write("<br/>");
+    
+
+
+    busqueda=_.find(newtrabajadores, function(newtrabajadores) {
+
+        return newtrabajadores.nombre=="Juan";
+
+    });
+     
+    document.write(busqueda);
+    document.write("<br/>");
+    document.write("<br/>")
+
+    resultado=_(newtrabajadores).first(2).sortBy('nombre').value();
+    document.write(resultado);
+    document.write("------------------");
+    while (resultado.length > 0) {
+        document.write(resultado.pop() + "<br/>");
+    }
+    document.write("<br/>");
+
+    
+
+   
+
+            
+</script>
+</body>
+
+</html>
