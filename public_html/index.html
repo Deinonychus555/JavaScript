@@ -30,7 +30,7 @@
 
     // Con la función 'Object.keys()' mostramos las propiedades de un objeto que no están contenidas en el prototipo.
     
-    // * ARRAY LIKE OBJECT
+    // ** ARRAY LIKE OBJECT
 
     // Para copiar objetos utilizamos la función 'Object.create()'.
     // Todas las propiedades se copiaran en el prototipo del nuevo objeto.
@@ -62,7 +62,7 @@
     console.log("cuadrado prototipo: "+cuadrado.clase);
     delete cuadrado['clase'];
 
-    // * HERENCIA DE PROTOTIPO.
+    // ** HERENCIA DE PROTOTIPO.
 
     // ¡¡Forma incorrecta!!
     // Herencia
@@ -78,7 +78,7 @@
     
     
     
-    // * SOBRECARGA DE FUNCIONES
+    // ** SOBRECARGA DE FUNCIONES
 
      // El nombre de la función debe ir en mayúscula para que permita tratarla como un costructor, es decir, con la función 'new' 
      // Ejemplo: var vehiculo = new Vehiculo()
@@ -120,7 +120,7 @@
     console.log("moto: "+Object.keys(moto));
 
 
-    // * HERENCIA SIMPLE DE OBJETOS
+    // ** HERENCIA SIMPLE DE OBJETOS
 
     // Llamada al constructor de la clase padre: ClasePadre.call(this,argumento). NO se hereda el prototipo.
 
@@ -148,7 +148,7 @@
     console.log("hijo: "+Object.keys(hijo));
 
 
-     // * PROTOTIPO DE OBJETOS
+     // ** PROTOTIPO DE OBJETOS
 
      // Creando nuevas propiedades en un prototipo: Clase.prototype.propiedad=*.
 
@@ -222,7 +222,7 @@
         document.getElementById("jefe_funcion").innerHTML=jefe.desplazar();
     }    
 
-    // * PROPIEDADES PRIVADAS
+    // ** PROPIEDADES PRIVADAS
 
     //  Para simular atributos privados se juega con el ámbito de uso de las variables en Javascript. Para declarar lo atributo privados, se deja de utilizar la clausula this y se pasa a definirlos como variables locales.
 
@@ -380,7 +380,7 @@
     document.write("<br/>");
     document.write("<br/>");
     
-    // * HERENCIA DE PROTOTIPO CON ATRIBUTOS PRIVADOS
+    // ** HERENCIA DE PROTOTIPO CON ATRIBUTOS PRIVADOS
     
     Object.defineProperty(Circunferencia2.prototype,'forma',{
         value:"redonda",
@@ -398,9 +398,12 @@
     console.log("circunferencia3: "+Object.keys(circunferencia3));
 
 
-    // * JSON y LODASH (https://lodash.com/)
+    // ** JSON y LODASH (https://lodash.com/)
     // Documentación: https://lodash.com/docs
     // https://raw.githubusercontent.com/lodash/lodash/2.4.1/dist/lodash.js
+    
+    // Lodash nos permite trabajar con arrays, ordenarlos, filtrarlos...
+    //Ej: _(array).funcion1().funcion()3
 
     var trabajadores  = [empleado, jefe, jefazo, ejecutivo];
 
